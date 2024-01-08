@@ -1,21 +1,24 @@
 package models;
 
+import engine.RotationUtil;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class Cube implements IModels{
-    private final float scale;
-    private final int texture;
+public class Cube extends Model implements IModels {
 
-    public Cube(float scale, int texture) {
-        this.scale = scale;
-        this.texture = texture;
+    public Cube(float scale, int texture, Vector3f position, RotationUtil rotation, Color color) {
+        super(scale, texture, position, rotation, color);
     }
 
     @Override
     public void render() {
-        glBindTexture(GL_TEXTURE_2D, texture);
+        applyTransformAndTextureBind();
+        applyColor();
+
+        float scale = getScale();
 
         //Front
         glBegin(GL_QUADS);
@@ -92,23 +95,8 @@ public class Cube implements IModels{
     }
 
     @Override
-    public void rotateY(float angle) {
-        glRotatef(angle, 0, 1, 0);
-    }
-
-    @Override
-    public void rotateX(float angle) {
-        glRotatef(angle, 1, 0, 0);
-    }
-
-    @Override
-    public void rotateZ(float angle) {
-        glRotatef(angle, 0, 0, 1);
-    }
-
-    @Override
-    public void move(Vector3f position) {
-        glTranslatef(position.x, position.y, position.z);
+    public void rotate(RotationUtil rotationUtil) {
+        setRotation(rotationUtil);
     }
 
     @Override

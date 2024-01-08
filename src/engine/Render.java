@@ -21,4 +21,8 @@ public class Render {
     public void renderOne(IModels model){
         model.render();
     }
+
+    public List<IModels> getModels() {
+        return models;
+    }
 }

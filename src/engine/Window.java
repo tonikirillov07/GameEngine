@@ -1,19 +1,21 @@
 package engine;
 
-import models.Cube;
+import gameWorld.Level;
+import models.Rectangle;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Window extends Constants {
-    private Cube cube, cube2;
     private Render render;
     private float currentTime, passedTime, deltaTime, fps;
+    private Level level;
 
     public void run(){
         try {
@@ -33,10 +35,11 @@ public class Window extends Constants {
 
             render = new Render();
 
-            cube = new Cube(0.5f, TextureUtil.loadTexture("textures/crate.png", TextureUtil.LINEAR));
+            Rectangle rectangle = new Rectangle(0.6f, 0, new Vector3f(0,0,0), RotationUtil.ZERO, new Color(255,0,0));
+            render.loadModel(rectangle);
 
-            render.loadModel(cube);
-            render.loadModel(cube2);
+            level = new Level(render);
+            level.createLevel(15, 15);
 
             update();
         }catch (Exception e){
@@ -62,9 +65,9 @@ public class Window extends Constants {
             currentTime = System.nanoTime();
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-            listenKeyboardInput();
-
             render.renderAll();
+
+            listenKeyboardInput();
 
             Display.update(true);
             if(LIMIT_FPS) Display.sync(SYNC_WITH_FPS);
@@ -84,13 +87,9 @@ public class Window extends Constants {
     private void listenKeyboardInput() {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) dispose();
 
-        if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            glRotatef(0.4f * getDeltaTime(), 0, 1, 0);
+        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
+            render.getModels().get(0).rotate(new RotationUtil(30f, 1, 1, 1));
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
-            glTranslatef(-0.4f, 0, 0);
-        }
-        if(Keyboard.isKeyDown(Keyboard.KEY_L)) cube.loadIdentity();
     }
 
     private boolean isOpen(){
@@ -105,10 +104,8 @@ public class Window extends Constants {
         glEnable(GL_TEXTURE_2D);
         glCullFace(GL_BACK);
 
-        GL11.glViewport(0, 0, getWidth(), getHeight());
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
+        glMatrixMode(GL_PROJECTION);
+        glFrustum(-1,1,-1,1,2,8);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
