@@ -15,11 +15,11 @@ public class Level {
     }
 
     public void createLevel(int width, int length){
-        int texture = TextureUtil.loadTexture("textures/crate.png", TextureUtil.LINEAR);
+        int texture = TextureUtil.loadTexture("textures/grass.png", TextureUtil.LINEAR);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < length; j++) {
-                render.loadModel(new Cube(0.4f, texture, new Vector3f(i * 0.4f, 0, j * 0.4f), RotationUtil.ZERO, new Color(255,255,255)));
+                render.loadModel(new Cube(0.4f, texture, new Vector3f(i * 0.4f, -1, j * 0.4f), RotationUtil.ZERO, new Color(255,255,255)));
             }
         }
     }

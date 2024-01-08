@@ -3,6 +3,9 @@ package engine;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.io.File;
 import java.io.FileInputStream;
 
 import static org.lwjgl.opengl.GL11.GL_LINEAR;
@@ -16,11 +19,19 @@ public class TextureUtil {
         try {
             Texture texture = TextureLoader.getTexture("PNG", new FileInputStream(path), filter);
 
+            if(!isNormalTexture(texture)){
+                ShowExceptions.showException(new Exception("Texture have wrong size. It may be not display correctly! Texture size: " + texture.getImageWidth() + "x" + texture.getImageHeight()));
+            }
+
             return texture.getTextureID();
         }catch (Exception e){
             ShowExceptions.showException(e);
         }
 
         return -1;
+    }
+
+    private static boolean isNormalTexture(Texture texture){
+        return texture.getImageWidth() == texture.getImageHeight();
     }
 }

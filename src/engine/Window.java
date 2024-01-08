@@ -1,7 +1,7 @@
 package engine;
 
 import gameWorld.Level;
-import models.Rectangle;
+import models.Cube;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -9,13 +9,16 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector3f;
+import player.Player;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Window extends Constants {
     private Render render;
-    private float currentTime, passedTime, deltaTime, fps;
+    private float currentTime, passedTime, deltaTime, fps, cubeAngleTemp;
     private Level level;
+    private Player player;
+    private Cube cube;
 
     public void run(){
         try {
@@ -32,14 +35,14 @@ public class Window extends Constants {
             Mouse.setGrabbed(GRAB_MOUSE);
 
             initGLSettings();
+            windowResize(getWidth(), getHeight());
 
             render = new Render();
 
-            Rectangle rectangle = new Rectangle(0.6f, 0, new Vector3f(0,0,0), RotationUtil.ZERO, new Color(255,0,0));
-            render.loadModel(rectangle);
-
             level = new Level(render);
             level.createLevel(15, 15);
+
+            player = new Player();
 
             update();
         }catch (Exception e){
@@ -65,9 +68,12 @@ public class Window extends Constants {
             currentTime = System.nanoTime();
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
+            glPushMatrix();
+            player.cameraApply();
             render.renderAll();
+            glPopMatrix();
 
-            listenKeyboardInput();
+            listenInput();
 
             Display.update(true);
             if(LIMIT_FPS) Display.sync(SYNC_WITH_FPS);
@@ -84,11 +90,15 @@ public class Window extends Constants {
         dispose();
     }
 
-    private void listenKeyboardInput() {
+    private void listenInput() {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) dispose();
 
         if(Keyboard.isKeyDown(Keyboard.KEY_W)){
             render.getModels().get(0).rotate(new RotationUtil(30f, 1, 1, 1));
+        }
+
+        if(Display.wasResized()){
+            windowResize(Display.getWidth(), Display.getHeight());
         }
     }
 
@@ -104,6 +114,7 @@ public class Window extends Constants {
         glEnable(GL_TEXTURE_2D);
         glCullFace(GL_BACK);
 
+        glLoadIdentity();
         glMatrixMode(GL_PROJECTION);
         glFrustum(-1,1,-1,1,2,8);
 
@@ -127,5 +138,12 @@ public class Window extends Constants {
 
     public int getHeight(){
         return getSize()[1];
+    }
+    private void windowResize(int x, int y){
+        glViewport(0,0,x,y);
+        float k = ((float) x / y);
+        float size = 0.1f;
+        glLoadIdentity();
+        glFrustum(-k*size, k * size, -size, size, size * 2, 100);
     }
 }
