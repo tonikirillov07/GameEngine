@@ -1,9 +1,6 @@
 package engine;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.util.Color;
-
-import java.nio.FloatBuffer;
 
 public abstract class Constants {
     public static final int WINDOW_WIDTH = 1200;

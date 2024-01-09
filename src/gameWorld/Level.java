@@ -5,6 +5,7 @@ import engine.Render;
 import engine.RotationUtil;
 import engine.TextureUtil;
 import models.Cube;
+import noise.SimplexNoise;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Random;
@@ -22,7 +23,9 @@ public class Level extends Constants {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < length; j++) {
-                render.loadModel(new Cube(cubeSize, new Random().nextInt(1,3) == 1 ? textureGrass: textureDirt, new Vector3f(i * cubeSize, -1, -j * cubeSize), RotationUtil.ZERO, WHITE));
+                float value = SimplexNoise.noise3_Fallback(12345, i * cubeSize, -1, j * cubeSize);
+
+                render.loadModel(new Cube(cubeSize, new Random().nextInt(1,3) == 1 ? textureGrass: textureDirt, new Vector3f((i * cubeSize), -1, -j * cubeSize), RotationUtil.ZERO, WHITE));
             }
         }
     }
