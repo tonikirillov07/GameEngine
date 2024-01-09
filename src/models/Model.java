@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public abstract class Model {
     private final float scale;
-    private int texture = -1;
+    private int texture;
     private Vector3f position;
     private RotationUtil rotation;
     private Color color;
@@ -45,8 +45,8 @@ public abstract class Model {
         this.color = color;
     }
 
-    void applyTransformAndTextureBind() {
-        if(texture != -1) glBindTexture(GL_TEXTURE_2D, getTexture());
+    public void applyTransformAndTextureBind() {
+        glBindTexture(GL_TEXTURE_2D, getTexture());
 
         glLoadIdentity();
         glTranslatef(getPosition().x, getPosition().y, getPosition().z);

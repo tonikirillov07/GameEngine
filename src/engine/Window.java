@@ -1,31 +1,38 @@
 package engine;
 
+import gameWorld.Environment;
 import gameWorld.Level;
-import models.Cube;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Color;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.glu.GLU;
+import org.newdawn.slick.TrueTypeFont;
+import org.newdawn.slick.UnicodeFont;
 import player.Player;
+
+import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class Window extends Constants {
     private Render render;
-    private float currentTime, passedTime, deltaTime, fps, cubeAngleTemp;
+    private float currentTime, passedTime, deltaTime, fps;
     private Level level;
+    private TrueTypeFont trueTypeFont;
     private Player player;
-    private Cube cube;
+    private Environment environment;
 
     public void run(){
         try {
             Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
             Display.setTitle(TITLE);
             Display.setResizable(IS_RESIZABLE);
+            Display.setVSyncEnabled(USE_VSYNC);
             Display.create();
+
+            Display.swapBuffers();
 
             checkError();
 
@@ -34,15 +41,24 @@ public class Window extends Constants {
 
             Mouse.setGrabbed(GRAB_MOUSE);
 
+            Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
+            trueTypeFont = new TrueTypeFont(awtFont, false);
+
             initGLSettings();
             windowResize(getWidth(), getHeight());
 
+            trueTypeFont = new TrueTypeFont(new UnicodeFont(new Font("Arial", Font.BOLD, 24)).getFont(), true);
+
             render = new Render();
 
-            level = new Level(render);
-            level.createLevel(15, 15);
-
             player = new Player();
+
+            level = new Level(render);
+            level.createLevel(15, 15, 0.4f);
+
+            environment = new Environment();
+            environment.enableFog(true);
+            environment.initFogDefault();
 
             update();
         }catch (Exception e){
@@ -68,14 +84,15 @@ public class Window extends Constants {
             currentTime = System.nanoTime();
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-            glPushMatrix();
-            player.cameraApply();
+            player.move(getDeltaTime());
+            setupCamera();
+
             render.renderAll();
-            glPopMatrix();
+
+            //trueTypeFont.drawString(0.100f, 0.50f, "THE LIGHTWEIGHT JAVA GAMES LIBRARY", new org.newdawn.slick.Color(255, 0, 0));
 
             listenInput();
 
-            Display.update(true);
             if(LIMIT_FPS) Display.sync(SYNC_WITH_FPS);
 
             Thread.yield();
@@ -85,6 +102,7 @@ public class Window extends Constants {
             fps = 1 / deltaTime;
 
             Display.setTitle(TITLE + " (fps: " + getFps() +")");
+            Display.update(true);
         }
 
         dispose();
@@ -92,10 +110,6 @@ public class Window extends Constants {
 
     private void listenInput() {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) dispose();
-
-        if(Keyboard.isKeyDown(Keyboard.KEY_W)){
-            render.getModels().get(0).rotate(new RotationUtil(30f, 1, 1, 1));
-        }
 
         if(Display.wasResized()){
             windowResize(Display.getWidth(), Display.getHeight());
@@ -109,10 +123,12 @@ public class Window extends Constants {
     public int[] getSize(){
         return new int[]{Display.getWidth(), Display.getHeight()};
     }
+
     private void initGLSettings(){
         glEnable(GL11.GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
-        glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+        glClearDepth(1);
 
         glLoadIdentity();
         glMatrixMode(GL_PROJECTION);
@@ -120,6 +136,10 @@ public class Window extends Constants {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        glEnable(GL_COLOR_MATERIAL);
 
         GL11.glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2], BACKGROUND_COLOR[3]);
     }
@@ -129,7 +149,7 @@ public class Window extends Constants {
     }
 
     public float getFps() {
-        return fps;
+        return AdvancedMath.roundNumber(fps, 2);
     }
 
     public int getWidth(){
@@ -139,11 +159,24 @@ public class Window extends Constants {
     public int getHeight(){
         return getSize()[1];
     }
+
     private void windowResize(int x, int y){
         glViewport(0,0,x,y);
-        float k = ((float) x / y);
+        float ratioXtoY = ((float) x / y);
         float size = 0.1f;
         glLoadIdentity();
-        glFrustum(-k*size, k * size, -size, size, size * 2, 100);
+        glFrustum(-ratioXtoY*size, ratioXtoY * size, -size, size, size * 2, 100);
+    }
+
+    private void setupCamera() {
+        GL11.glMatrixMode(GL_PROJECTION);
+        GL11.glLoadIdentity();
+
+        glRotatef(player.getRotationY(), 0,1,0);
+        glRotatef(player.getRotationX(), 1,0,0);
+        glTranslatef(player.getX(),player.getY(),player.getZ());
+
+        GLU.gluPerspective(70.0F, (float) getWidth() / getHeight(), 0.05F, 1000.0F);
+        GL11.glMatrixMode(GL_MODELVIEW);
     }
 }

@@ -1,7 +1,6 @@
 package models;
 
 import engine.RotationUtil;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Color;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -21,6 +20,7 @@ public class Cube extends Model implements IModels {
         float scale = getScale();
 
         //Front
+        glNormal3f(0,0,-1);
         glBegin(GL_QUADS);
         glTexCoord3f(0, 0, 0);
         glVertex3f(0,0,0);
@@ -34,6 +34,7 @@ public class Cube extends Model implements IModels {
 
         //Back
         glBegin(GL_QUADS);
+        glNormal3f(0,0,1);
         glTexCoord3f(0, 0, 1);
         glVertex3f(0,0, scale);
         glTexCoord3f(0, 1, 1);
@@ -46,6 +47,7 @@ public class Cube extends Model implements IModels {
 
         //Top
         glBegin(GL_QUADS);
+        glNormal3f(0,1,0);
         glTexCoord3f(0, 0, 0);
         glVertex3f(0,scale, 0);
         glTexCoord3f(0, 1, 0);
@@ -58,6 +60,7 @@ public class Cube extends Model implements IModels {
 
         //Bottom
         glBegin(GL_QUADS);
+        glNormal3f(0,-1,0);
         glTexCoord3f(0, 0, 0);
         glVertex3f(0,0, 0);
         glTexCoord3f(0, 1, 0);
@@ -70,6 +73,7 @@ public class Cube extends Model implements IModels {
 
         //Left
         glBegin(GL_QUADS);
+        glNormal3f(-1,0,0);
         glTexCoord3f(0, 0, 0);
         glVertex3f(0,0, 0);
         glTexCoord3f(0, 1, 0);
@@ -82,6 +86,7 @@ public class Cube extends Model implements IModels {
 
         //Right
         glBegin(GL_QUADS);
+        glNormal3f(1,0,0);
         glTexCoord3f(0, 0, 0);
         glVertex3f(scale,0, 0);
         glTexCoord3f(0, 1, 0);
@@ -92,15 +97,5 @@ public class Cube extends Model implements IModels {
         glVertex3f(scale,0, scale);
         glEnd();
 
-    }
-
-    @Override
-    public void rotate(RotationUtil rotationUtil) {
-        setRotation(rotationUtil);
-    }
-
-    @Override
-    public void loadIdentity() {
-        glLoadIdentity();
     }
 }
