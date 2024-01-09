@@ -1,4 +1,4 @@
-package noise;
+package gameWorld.noise;
 
 /**
  * K.jpg's OpenSimplex 2, smooth variant ("SuperSimplex")

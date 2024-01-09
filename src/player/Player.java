@@ -10,11 +10,10 @@ import static org.lwjgl.util.glu.GLU.gluLookAt;
 
 public class Player extends Constants {
     private float x, y, z, rotationX, rotationY, rotationZ, speed = 10f;
-    private byte direction = 0;
 
     public void move(float deltaTime){
-        direction = isKeyDown(Keyboard.KEY_W) ? MOVE_FORWARD: isKeyDown(Keyboard.KEY_S) ?
-                MOVE_BACKWARD: isKeyDown(Keyboard.KEY_A) ? MOVE_LEFT: isKeyDown(Keyboard.KEY_D) ? MOVE_RIGHT: DONT_MOVE;
+        byte direction = isKeyDown(Keyboard.KEY_W) ? MOVE_FORWARD : isKeyDown(Keyboard.KEY_S) ?
+                MOVE_BACKWARD : isKeyDown(Keyboard.KEY_A) ? MOVE_LEFT : isKeyDown(Keyboard.KEY_D) ? MOVE_RIGHT : DONT_MOVE;
 
         switch (direction){
             case MOVE_FORWARD -> x+=0.02f;

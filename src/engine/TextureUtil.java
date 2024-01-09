@@ -20,7 +20,7 @@ public class TextureUtil {
             Texture texture = TextureLoader.getTexture("PNG", new FileInputStream(path), filter);
 
             if(!isNormalTexture(texture)){
-                ShowExceptions.showException(new Exception("Texture have wrong size. It may be not display correctly! Texture size: " + texture.getImageWidth() + "x" + texture.getImageHeight()));
+                ShowExceptions.showException(new Exception("The texture has the wrong resolution! It may not display correctly. Texture size: " + texture.getImageWidth() + "x" + texture.getImageHeight()));
             }
 
             return texture.getTextureID();

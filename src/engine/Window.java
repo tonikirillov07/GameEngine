@@ -32,8 +32,6 @@ public class Window extends Constants {
             Display.setVSyncEnabled(USE_VSYNC);
             Display.create();
 
-            Display.swapBuffers();
-
             checkError();
 
             Mouse.create();
@@ -54,7 +52,7 @@ public class Window extends Constants {
             player = new Player();
 
             level = new Level(render);
-            level.createLevel(15, 15, 0.4f);
+            level.createLevel(15, 15, 0.2f);
 
             environment = new Environment();
             environment.enableFog(true);
@@ -127,12 +125,11 @@ public class Window extends Constants {
     private void initGLSettings(){
         glEnable(GL11.GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
-        glEnable(GL_CULL_FACE);
         glClearDepth(1);
 
         glLoadIdentity();
         glMatrixMode(GL_PROJECTION);
-        glFrustum(-1,1,-1,1,2,8);
+        glFrustum(-1,1,-1,1,2,800);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -5,7 +5,7 @@ import engine.Render;
 import engine.RotationUtil;
 import engine.TextureUtil;
 import models.Cube;
-import noise.SimplexNoise;
+import gameWorld.noise.SimplexNoise;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Random;
