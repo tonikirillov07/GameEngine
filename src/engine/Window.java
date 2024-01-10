@@ -1,5 +1,7 @@
 package engine;
 
+import UI.UIElement;
+import UI.UIRenderer;
 import gameWorld.Environment;
 import gameWorld.Level;
 import org.lwjgl.input.Keyboard;
@@ -8,11 +10,15 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
+import player.Camera;
 import player.Player;
 
 import java.awt.*;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -22,7 +28,10 @@ public class Window extends Constants {
     private Level level;
     private TrueTypeFont trueTypeFont;
     private Player player;
+    private Camera camera;
     private Environment environment;
+    private UIRenderer uiRenderer;
+    private UIElement targetTexture;
 
     public void run(){
         try {
@@ -49,14 +58,20 @@ public class Window extends Constants {
 
             render = new Render();
 
-            player = new Player();
-
             level = new Level(render);
             level.createLevel(15, 15, 0.2f);
+
+            camera = new Camera(new Vector3f(0,0,0), new Vector3f(0,0,0), this);
+            player = new Player(camera);
 
             environment = new Environment();
             environment.enableFog(true);
             environment.initFogDefault();
+
+            uiRenderer = new UIRenderer(this);
+            targetTexture = new UIElement(Objects.requireNonNull(TextureUtil.createTexture("textures/target.png", TextureUtil.LINEAR)), new Vector2f(0,0), RotationUtil.ZERO, true);
+
+            uiRenderer.loadUiElement(targetTexture);
 
             update();
         }catch (Exception e){
@@ -82,8 +97,8 @@ public class Window extends Constants {
             currentTime = System.nanoTime();
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
+            camera.updateCamera();
             player.move(getDeltaTime());
-            setupCamera();
 
             render.renderAll();
 
@@ -91,19 +106,21 @@ public class Window extends Constants {
 
             listenInput();
 
+            Display.setTitle(TITLE + " (fps: " + getFps() +"). Position: (" + player.getX() + ", " + player.getY() + ", " + player.getZ() + ")");
+            Display.update(true);
             if(LIMIT_FPS) Display.sync(SYNC_WITH_FPS);
 
             Thread.yield();
-
-            passedTime = System.nanoTime();
-            deltaTime = (passedTime - currentTime) / 1_000_000_000;
-            fps = 1 / deltaTime;
-
-            Display.setTitle(TITLE + " (fps: " + getFps() +")");
-            Display.update(true);
+            calculateDeltaTimeAndFps();
         }
 
         dispose();
+    }
+
+    private void calculateDeltaTimeAndFps() {
+        passedTime = System.nanoTime();
+        deltaTime = (passedTime - currentTime) / 1_000_000_000;
+        fps = 1 / deltaTime;
     }
 
     private void listenInput() {
@@ -127,8 +144,8 @@ public class Window extends Constants {
         glEnable(GL_TEXTURE_2D);
         glClearDepth(1);
 
-        glLoadIdentity();
-        glMatrixMode(GL_PROJECTION);
+        GL11.glLoadIdentity();
+        GL11.glOrtho(0, getWidth(), 0, getHeight(), 1, -1);
         glFrustum(-1,1,-1,1,2,800);
 
         glEnable(GL_BLEND);
@@ -137,6 +154,8 @@ public class Window extends Constants {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_COLOR_MATERIAL);
+
+        glTranslatef(0,0,-2);
 
         GL11.glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2], BACKGROUND_COLOR[3]);
     }
@@ -162,18 +181,6 @@ public class Window extends Constants {
         float ratioXtoY = ((float) x / y);
         float size = 0.1f;
         glLoadIdentity();
-        glFrustum(-ratioXtoY*size, ratioXtoY * size, -size, size, size * 2, 100);
-    }
-
-    private void setupCamera() {
-        GL11.glMatrixMode(GL_PROJECTION);
-        GL11.glLoadIdentity();
-
-        glRotatef(player.getRotationY(), 0,1,0);
-        glRotatef(player.getRotationX(), 1,0,0);
-        glTranslatef(player.getX(),player.getY(),player.getZ());
-
-        GLU.gluPerspective(70.0F, (float) getWidth() / getHeight(), 0.05F, 1000.0F);
-        GL11.glMatrixMode(GL_MODELVIEW);
+        glFrustum(-ratioXtoY * size, ratioXtoY * size, -size, size, size * 2, 800);
     }
 }

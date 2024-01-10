@@ -18,7 +18,8 @@ public abstract class Constants {
     public static final byte MOVE_LEFT = 2;
     public static final byte MOVE_RIGHT = -2;
     public static final byte DONT_MOVE = 0;
-    public static final float SENSIVITY = 0.3f;
+    public static final float SENSIVITY = 2f;
+    public static final float ROTATE_X_LIMIT_ANGLE = 45f;
 
     public static final Color WHITE = new Color(255,255,255);
 }

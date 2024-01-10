@@ -18,8 +18,8 @@ public class Level extends Constants {
     }
 
     public void createLevel(int width, int length, float cubeSize){
-        int textureGrass = TextureUtil.loadTexture("textures/grass.png", TextureUtil.LINEAR);
-        int textureDirt = TextureUtil.loadTexture("textures/dirt.png", TextureUtil.LINEAR);
+        int textureGrass = TextureUtil.createTextureInteger("textures/grass.png", TextureUtil.LINEAR);
+        int textureDirt = TextureUtil.createTextureInteger("textures/dirt.png", TextureUtil.LINEAR);
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < length; j++) {
