@@ -3,7 +3,6 @@ package player;
 import engine.Constants;
 import engine.RotationUtil;
 import engine.Window;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
@@ -32,8 +31,8 @@ public class Camera extends Constants {
 
         GLU.gluPerspective(70.0F, (float) window.getWidth() / window.getHeight(), 0.05F, 1000.0F);
 
-        glRotatef(-rotationX.getAngle(), 1, 0, 0);
-        glRotatef(-rotationY.getAngle(), 0, 1, 0);
+        glRotatef(-rotationX.angle(), 1, 0, 0);
+        glRotatef(-rotationY.angle(), 0, 1, 0);
 
         glTranslatef(-position.getX(), -position.getY(), -position.getZ());
 

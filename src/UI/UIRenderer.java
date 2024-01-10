@@ -2,7 +2,6 @@ package UI;
 
 import engine.Window;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.Texture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class UIRenderer {
             if(!uiElement.isRenderInCenter()) {
                 glLoadIdentity();
                 glTranslatef(uiElement.getPosition().x, uiElement.getPosition().y, 0);
-                glRotatef(uiElement.getRotationUtil().getAngle(), uiElement.getRotationUtil().getX(), uiElement.getRotationUtil().getY(), uiElement.getRotationUtil().getZ());
+                glRotatef(uiElement.getRotationUtil().angle(), uiElement.getRotationUtil().x(), uiElement.getRotationUtil().y(), uiElement.getRotationUtil().z());
             }
 
             float textureWidth = uiElement.getTexture().getTextureWidth();

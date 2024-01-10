@@ -5,11 +5,11 @@ import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 
 public class UIElement {
-    private Texture texture;
-    private int textureId;
-    private Vector2f position;
-    private RotationUtil rotationUtil;
-    private boolean renderInCenter = true;
+    private final Texture texture;
+    private final int textureId;
+    private final Vector2f position;
+    private final RotationUtil rotationUtil;
+    private final boolean renderInCenter;
 
     public UIElement(Texture texture, Vector2f position, RotationUtil rotationUtil, boolean renderInCenter) {
         this.texture = texture;

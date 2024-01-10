@@ -59,7 +59,7 @@ public class Window extends Constants {
             render = new Render();
 
             level = new Level(render);
-            level.createLevel(15, 15, 0.2f);
+            level.createLevel(16, 16, 2, 0.2f);
 
             camera = new Camera(new Vector3f(0,0,0), new Vector3f(0,0,0), this);
             player = new Player(camera);

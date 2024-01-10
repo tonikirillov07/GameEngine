@@ -5,7 +5,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
 
-public class AdvancedMath {
+public abstract class AdvancedMath {
     public static float roundNumber(float number, int accuracy){
         try {
             DecimalFormat decimalFormat = new DecimalFormat("##." + "#".repeat(Math.max(0, accuracy)));

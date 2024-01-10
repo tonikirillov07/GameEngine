@@ -50,7 +50,7 @@ public abstract class Model {
 
         glLoadIdentity();
         glTranslatef(getPosition().x, getPosition().y, getPosition().z);
-        glRotatef(getRotation().getAngle(), getRotation().getX(), getRotation().getY(), getRotation().getZ());
+        glRotatef(getRotation().angle(), getRotation().x(), getRotation().y(), getRotation().z());
     }
 
     public void setPosition(Vector3f position) {

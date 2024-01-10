@@ -12,7 +12,7 @@ public class TextureUtil {
     public static final int NEAREST = GL_NEAREST;
     public static final int LINEAR = GL_LINEAR;
 
-    public static int createTextureInteger(String path, int filter){
+    public static int createTextureId(String path, int filter){
         try {
             Texture texture = getTexture(path, filter);
             checkIsTextureNormal(texture);
