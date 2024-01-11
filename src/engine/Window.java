@@ -61,7 +61,7 @@ public class Window extends Constants {
             level = new Level(render);
             level.createLevel(16, 16, 2, 0.2f);
 
-            camera = new Camera(new Vector3f(0,0,0), new Vector3f(0,0,0), this);
+            camera = new Camera(CAMERA_DEFAULT_POSITION, new Vector3f(0,0,0), this);
             player = new Player(camera);
 
             environment = new Environment();
@@ -101,6 +101,7 @@ public class Window extends Constants {
             player.move(getDeltaTime());
 
             render.renderAll();
+            uiRenderer.renderAll();
 
             //trueTypeFont.drawString(0.100f, 0.50f, "THE LIGHTWEIGHT JAVA GAMES LIBRARY", new org.newdawn.slick.Color(255, 0, 0));
 
@@ -126,6 +127,21 @@ public class Window extends Constants {
     private void listenInput() {
         if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) dispose();
 
+        if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+            System.out.println(camera.getPosition());
+        }
+
+        if(Keyboard.isKeyDown(Keyboard.KEY_R)){
+            player.setRotationX(0);
+            player.setRotationY(0);
+
+            camera.move(CAMERA_DEFAULT_POSITION);
+
+            player.setX(CAMERA_DEFAULT_POSITION.getX());
+            player.setY(CAMERA_DEFAULT_POSITION.getY());
+            player.setZ(CAMERA_DEFAULT_POSITION.getZ());
+        }
+
         if(Display.wasResized()){
             windowResize(Display.getWidth(), Display.getHeight());
         }
@@ -146,7 +162,7 @@ public class Window extends Constants {
 
         GL11.glLoadIdentity();
         GL11.glOrtho(0, getWidth(), 0, getHeight(), 1, -1);
-        glFrustum(-1,1,-1,1,2,800);
+        glFrustum(-1, 1, -1, 1, 2, 800);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -154,8 +170,6 @@ public class Window extends Constants {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_COLOR_MATERIAL);
-
-        glTranslatef(0,0,-2);
 
         GL11.glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2], BACKGROUND_COLOR[3]);
     }
@@ -179,7 +193,12 @@ public class Window extends Constants {
     private void windowResize(int x, int y){
         glViewport(0,0,x,y);
         float ratioXtoY = ((float) x / y);
+
         float size = 0.1f;
+        if (ratioXtoY > 1) {
+            size *= ratioXtoY;
+        }
+
         glLoadIdentity();
         glFrustum(-ratioXtoY * size, ratioXtoY * size, -size, size, size * 2, 800);
     }

@@ -44,7 +44,7 @@ public class Camera extends Constants {
     }
 
     public void rotateY(float angle){
-        rotationY = new RotationUtil(angle, 1,0,0);
+        rotationY = new RotationUtil(angle, 0,1,0);
     }
 
     public void move(Vector3f position){

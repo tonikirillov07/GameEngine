@@ -13,14 +13,15 @@ public class Player extends Constants {
 
     public Player(Camera camera) {
         this.camera = camera;
+
+        x = CAMERA_DEFAULT_POSITION.getX();
+        y = CAMERA_DEFAULT_POSITION.getY();
+        z = CAMERA_DEFAULT_POSITION.getZ();
     }
 
     public void move(float deltaTime) {
         byte direction = isKeyDown(Keyboard.KEY_W) ? MOVE_FORWARD : isKeyDown(Keyboard.KEY_S) ?
                 MOVE_BACKWARD : isKeyDown(Keyboard.KEY_A) ? MOVE_LEFT : isKeyDown(Keyboard.KEY_D) ? MOVE_RIGHT : DONT_MOVE;
-
-        double cos = Math.cos(rotationY);
-        double sin = Math.cos(rotationY);
 
         switch (direction) {
             case MOVE_FORWARD -> {
@@ -94,5 +95,25 @@ public class Player extends Constants {
 
     public float getZ() {
         return z;
+    }
+
+    public void setRotationX(float rotationX) {
+        this.rotationX = rotationX;
+    }
+
+    public void setRotationY(float rotationY) {
+        this.rotationY = rotationY;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
     }
 }

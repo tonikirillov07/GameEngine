@@ -1,6 +1,7 @@
 package engine;
 
 import org.lwjgl.util.Color;
+import org.lwjgl.util.vector.Vector3f;
 
 public abstract class Constants {
     public static final int WINDOW_WIDTH = 1200;
@@ -20,6 +21,7 @@ public abstract class Constants {
     public static final byte DONT_MOVE = 0;
     public static final float SENSIVITY = 2f;
     public static final float ROTATE_X_LIMIT_ANGLE = 45f;
+    public static final Vector3f CAMERA_DEFAULT_POSITION = new Vector3f(1.9503515f, 1.0066329f, 2.2858953f);
 
     public static final Color WHITE = new Color(255,255,255);
 }

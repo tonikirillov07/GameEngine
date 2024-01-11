@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Render {
-    private List<IModels> models = new ArrayList<>();
+    private final List<IModels> models = new ArrayList<>();
 
     public void loadModel(IModels model){
         models.add(model);
