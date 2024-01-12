@@ -64,4 +64,15 @@ public abstract class Model {
     public void setRotation(RotationUtil rotation) {
         this.rotation = rotation;
     }
+
+    @Override
+    public String toString() {
+        return "Model{" +
+                "scale=" + scale +
+                ", texture=" + texture +
+                ", position=" + position +
+                ", rotation=" + rotation +
+                ", color=" + color +
+                '}';
+    }
 }

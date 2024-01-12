@@ -1,11 +1,9 @@
 package player;
 
-
 import engine.Constants;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
-
 
 public class Player extends Constants {
     private float x, y, z, rotationX, rotationY, speed = 10f;
@@ -22,6 +20,8 @@ public class Player extends Constants {
     public void move(float deltaTime) {
         byte direction = isKeyDown(Keyboard.KEY_W) ? MOVE_FORWARD : isKeyDown(Keyboard.KEY_S) ?
                 MOVE_BACKWARD : isKeyDown(Keyboard.KEY_A) ? MOVE_LEFT : isKeyDown(Keyboard.KEY_D) ? MOVE_RIGHT : DONT_MOVE;
+
+        Vector3f moveDirection = new Vector3f();
 
         switch (direction) {
             case MOVE_FORWARD -> {

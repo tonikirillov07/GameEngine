@@ -4,12 +4,12 @@ import UI.UIElement;
 import UI.UIRenderer;
 import gameWorld.Environment;
 import gameWorld.Level;
+import models.Cube;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
@@ -32,6 +32,7 @@ public class Window extends Constants {
     private Environment environment;
     private UIRenderer uiRenderer;
     private UIElement targetTexture;
+    private Cube cube;
 
     public void run(){
         try {
@@ -59,7 +60,10 @@ public class Window extends Constants {
             render = new Render();
 
             level = new Level(render);
-            level.createLevel(16, 16, 2, 0.2f);
+            //level.createLevel(16, 16, 2, 0.2f);
+
+            cube = new Cube(0.4f, TextureUtil.createTextureId("textures/dirt.png", TextureUtil.LINEAR), new Vector3f(0,0,0), RotationUtil.ZERO, WHITE);
+            render.loadModel(cube);
 
             camera = new Camera(CAMERA_DEFAULT_POSITION, new Vector3f(0,0,0), this);
             player = new Player(camera);
@@ -170,6 +174,9 @@ public class Window extends Constants {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_COLOR_MATERIAL);
+
+        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);
 
         GL11.glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2], BACKGROUND_COLOR[3]);
     }

@@ -21,7 +21,7 @@ public class Cube extends Model implements IModels {
 
         //Front
         glBegin(GL_QUADS);
-        glNormal3f(0,0,-1);
+        glNormal3f(0,0,1);
         glTexCoord3f(0, 0, 0);
         glVertex3f(0,0,0);
         glTexCoord3f(0, 1,0);
@@ -32,7 +32,7 @@ public class Cube extends Model implements IModels {
         glVertex3f(scale,0, 0);
 
         //Back
-        glNormal3f(0,0,1);
+        glNormal3f(0,0,-1);
         glTexCoord3f(0, 0, 1);
         glVertex3f(0,0, scale);
         glTexCoord3f(0, 1, 1);
