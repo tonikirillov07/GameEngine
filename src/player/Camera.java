@@ -3,6 +3,7 @@ package player;
 import engine.Constants;
 import engine.RotationUtil;
 import engine.Window;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector3f;
@@ -47,8 +48,12 @@ public class Camera extends Constants {
         rotationY = new RotationUtil(angle, 0,1,0);
     }
 
-    public void move(Vector3f position){
-        this.position = position;
+    public void setPosition(@NotNull Vector3f position){
+        this.position.set(position.x, position.y, position.z);
+    }
+
+    public void translate(@NotNull Vector3f vector3f){
+        position.translate(-vector3f.x, -vector3f.y, -vector3f.z);
     }
 
     public Vector3f getPosition() {
@@ -57,5 +62,12 @@ public class Camera extends Constants {
 
     public Vector3f getRotation() {
         return rotation;
+    }
+
+    public void resetTransform(){
+        rotationX = RotationUtil.ZERO;
+        rotationY = RotationUtil.ZERO;
+
+        setPosition(CAMERA_DEFAULT_POSITION);
     }
 }

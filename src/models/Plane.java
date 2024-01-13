@@ -29,5 +29,4 @@ public class Plane extends Model implements IModels{
         glVertex3f(scale,0,0);
         glEnd();
     }
-
 }

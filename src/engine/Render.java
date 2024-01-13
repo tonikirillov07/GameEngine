@@ -10,15 +10,17 @@ public class Render {
 
     public void loadModel(IModels model){
         models.add(model);
+
+        Logs.getLogger().info("Loaded model " + model.toString());
     }
 
     public void renderAll(){
         for(IModels iModel : models){
-            iModel.render();
+            renderOne(iModel);
         }
     }
 
-    public void renderOne(IModels model){
+    public void renderOne(@org.jetbrains.annotations.NotNull IModels model){
         model.render();
     }
 

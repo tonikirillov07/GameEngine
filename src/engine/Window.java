@@ -15,6 +15,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
 import player.Camera;
+import player.FreeCamera;
 import player.Player;
 
 import java.awt.*;
@@ -27,12 +28,11 @@ public class Window extends Constants {
     private float currentTime, passedTime, deltaTime, fps;
     private Level level;
     private TrueTypeFont trueTypeFont;
-    private Player player;
+    private FreeCamera freeCamera;
     private Camera camera;
     private Environment environment;
     private UIRenderer uiRenderer;
     private UIElement targetTexture;
-    private Cube cube;
 
     public void run(){
         try {
@@ -60,13 +60,10 @@ public class Window extends Constants {
             render = new Render();
 
             level = new Level(render);
-            //level.createLevel(16, 16, 2, 0.2f);
-
-            cube = new Cube(0.4f, TextureUtil.createTextureId("textures/dirt.png", TextureUtil.LINEAR), new Vector3f(0,0,0), RotationUtil.ZERO, WHITE);
-            render.loadModel(cube);
+            level.createLevel(16, 16, 2, 0.2f);
 
             camera = new Camera(CAMERA_DEFAULT_POSITION, new Vector3f(0,0,0), this);
-            player = new Player(camera);
+            freeCamera = new FreeCamera(camera);
 
             environment = new Environment();
             environment.enableFog(true);
@@ -74,7 +71,6 @@ public class Window extends Constants {
 
             uiRenderer = new UIRenderer(this);
             targetTexture = new UIElement(Objects.requireNonNull(TextureUtil.createTexture("textures/target.png", TextureUtil.LINEAR)), new Vector2f(0,0), RotationUtil.ZERO, true);
-
             uiRenderer.loadUiElement(targetTexture);
 
             update();
@@ -102,7 +98,7 @@ public class Window extends Constants {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
             camera.updateCamera();
-            player.move(getDeltaTime());
+            freeCamera.move(getDeltaTime());
 
             render.renderAll();
             uiRenderer.renderAll();
@@ -111,7 +107,7 @@ public class Window extends Constants {
 
             listenInput();
 
-            Display.setTitle(TITLE + " (fps: " + getFps() +"). Position: (" + player.getX() + ", " + player.getY() + ", " + player.getZ() + ")");
+            Display.setTitle(TITLE + " (fps: " + getFps() +"). Position: " + freeCamera.getPosition());
             Display.update(true);
             if(LIMIT_FPS) Display.sync(SYNC_WITH_FPS);
 
@@ -136,14 +132,8 @@ public class Window extends Constants {
         }
 
         if(Keyboard.isKeyDown(Keyboard.KEY_R)){
-            player.setRotationX(0);
-            player.setRotationY(0);
-
-            camera.move(CAMERA_DEFAULT_POSITION);
-
-            player.setX(CAMERA_DEFAULT_POSITION.getX());
-            player.setY(CAMERA_DEFAULT_POSITION.getY());
-            player.setZ(CAMERA_DEFAULT_POSITION.getZ());
+            freeCamera.resetTransform();
+            camera.resetTransform();
         }
 
         if(Display.wasResized()){
@@ -166,6 +156,8 @@ public class Window extends Constants {
 
         GL11.glLoadIdentity();
         GL11.glOrtho(0, getWidth(), 0, getHeight(), 1, -1);
+
+        GL11.glLoadIdentity();
         glFrustum(-1, 1, -1, 1, 2, 800);
 
         glEnable(GL_BLEND);
@@ -174,9 +166,6 @@ public class Window extends Constants {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         glEnable(GL_COLOR_MATERIAL);
-
-        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);
 
         GL11.glClearColor(BACKGROUND_COLOR[0], BACKGROUND_COLOR[1], BACKGROUND_COLOR[2], BACKGROUND_COLOR[3]);
     }
@@ -208,5 +197,16 @@ public class Window extends Constants {
 
         glLoadIdentity();
         glFrustum(-ratioXtoY * size, ratioXtoY * size, -size, size, size * 2, 800);
+
+        glTranslatef(0,0,-size * 2);
+    }
+
+    private void initCulling(boolean b){
+        if(b) {
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            GL11.glCullFace(GL11.GL_BACK);
+        }else {
+            GL11.glDisable(GL11.GL_CULL_FACE);
+        }
     }
 }

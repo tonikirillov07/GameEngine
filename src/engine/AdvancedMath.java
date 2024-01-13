@@ -1,5 +1,9 @@
 package engine;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.util.vector.Vector3f;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -16,9 +20,22 @@ public abstract class AdvancedMath {
         }
     }
 
-    public static FloatBuffer createFloatBuffer(float[] array) {
+    public static @NotNull FloatBuffer createFloatBuffer(float @NotNull [] array) {
         FloatBuffer buffer = ByteBuffer.allocateDirect(array.length * 4).order(ByteOrder.nativeOrder()).asFloatBuffer();
         buffer.put(array).flip();
         return buffer;
     }
+
+    @Contract("_, _ -> new")
+    public static @NotNull Vector3f getDirection(float pitch, float yaw){
+        double pitchRadians = Math.toRadians(pitch);
+        double yawRadians = Math.toRadians(yaw);
+
+        double xDirection = Math.cos(pitchRadians) * Math.sin(yawRadians);
+        double yDirection = Math.sin(pitchRadians);
+        double zDirection = Math.cos(pitchRadians) * Math.cos(yawRadians);
+
+        return new Vector3f((float) xDirection, (float) yDirection, (float) zDirection);
+    }
+
 }
