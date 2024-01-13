@@ -2,9 +2,10 @@ package engine;
 
 import UI.UIElement;
 import UI.UIRenderer;
+import engine.textures.TextureUtil;
+import engine.textures.TexturesDictionary;
 import gameWorld.Environment;
 import gameWorld.Level;
-import models.Cube;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -16,7 +17,6 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
 import player.Camera;
 import player.FreeCamera;
-import player.Player;
 
 import java.awt.*;
 import java.util.Objects;
@@ -33,6 +33,7 @@ public class Window extends Constants {
     private Environment environment;
     private UIRenderer uiRenderer;
     private UIElement targetTexture;
+    private TexturesDictionary texturesDictionary;
 
     public void run(){
         try {
@@ -59,7 +60,10 @@ public class Window extends Constants {
 
             render = new Render();
 
-            level = new Level(render);
+            texturesDictionary = new TexturesDictionary();
+            texturesDictionary.loadTextures();
+
+            level = new Level(render, texturesDictionary);
             level.createLevel(16, 16, 2, 0.2f);
 
             camera = new Camera(CAMERA_DEFAULT_POSITION, new Vector3f(0,0,0), this);
@@ -195,10 +199,12 @@ public class Window extends Constants {
             size *= ratioXtoY;
         }
 
-        glLoadIdentity();
-        glFrustum(-ratioXtoY * size, ratioXtoY * size, -size, size, size * 2, 800);
+        float zNear = size * 2;
 
-        glTranslatef(0,0,-size * 2);
+        glLoadIdentity();
+        glFrustum(-ratioXtoY * size, ratioXtoY * size, -size, size, zNear, 800);
+
+        glTranslatef(0,0,-zNear);
     }
 
     private void initCulling(boolean b){

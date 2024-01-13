@@ -24,4 +24,6 @@ public abstract class Constants {
     public static final Vector3f CAMERA_DEFAULT_POSITION = new Vector3f(1.9503515f, 1.0066329f, 2.2858953f);
 
     public static final Color WHITE = new Color(255,255,255);
+
+    public static final String TEXTURES_FOLDER = "textures/";
 }

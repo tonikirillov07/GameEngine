@@ -1,5 +1,6 @@
-package engine;
+package engine.textures;
 
+import engine.ShowExceptions;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
