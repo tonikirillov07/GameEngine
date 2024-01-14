@@ -1,28 +1,18 @@
 package engine;
 
-import UI.UIElement;
 import UI.UIRenderer;
-import engine.textures.TextureUtil;
 import engine.textures.TexturesDictionary;
 import gameWorld.Environment;
 import gameWorld.Level;
-import models.Plane;
+import models.Prism;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
 import player.Camera;
 import player.FreeCamera;
-
-import java.awt.*;
-import java.nio.FloatBuffer;
-import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,12 +20,12 @@ public class Window extends Constants {
     private Render render;
     private float currentTime, passedTime, deltaTime, fps;
     private Level level;
-    private TrueTypeFont trueTypeFont;
     private FreeCamera freeCamera;
     private Camera camera;
     private Environment environment;
     private TexturesDictionary texturesDictionary;
     private UIRenderer uiRenderer;
+    private Prism prism;
 
     public void run(){
         try {
@@ -51,9 +41,6 @@ public class Window extends Constants {
             Keyboard.create();
 
             Mouse.setGrabbed(GRAB_MOUSE);
-
-            Font awtFont = new Font("Times New Roman", Font.BOLD, 24);
-            trueTypeFont = new TrueTypeFont(awtFont, false);
 
             initGLSettings();
             windowResize(getWidth(), getHeight());
@@ -75,14 +62,13 @@ public class Window extends Constants {
 
             uiRenderer = new UIRenderer(this);
 
+            prism = new Prism(0.4f, texturesDictionary.getLogOakTexture(), new Vector3f(0,0,2),  RotationUtil.ZERO, WHITE);
+            render.loadModel(prism);
+
             update();
         }catch (Exception e){
             ShowExceptions.showException(e);
         }
-    }
-
-    private void drawString(float x, float y, String text){
-        trueTypeFont.drawString(x,y,text);
     }
 
     private void checkError(){
