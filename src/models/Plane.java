@@ -21,11 +21,11 @@ public class Plane extends Model implements IModels{
         glBegin(GL_QUADS);
         glTexCoord3f(0,0,0);
         glVertex3f(0,0,0);
-        glTexCoord3f(0,0,1);
+        glTexCoord3f(0, 1, 1);
         glVertex3f(0,0, scale);
-        glTexCoord3f(1,0,1);
+        glTexCoord3f(1, 1, 1);
         glVertex3f(scale,0, scale);
-        glTexCoord3f(1,0,0);
+        glTexCoord3f(1, 0, 1);
         glVertex3f(scale,0,0);
         glEnd();
     }

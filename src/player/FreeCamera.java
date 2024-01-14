@@ -1,9 +1,11 @@
 package player;
 
+import engine.AdvancedMath;
 import engine.Constants;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.util.vector.Vector;
 import org.lwjgl.util.vector.Vector3f;
 
 public class FreeCamera extends Constants {
@@ -32,14 +34,6 @@ public class FreeCamera extends Constants {
             case MOVE_RIGHT -> moveLeftOrRight((byte) -1);
         }
 
-        if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-            if(rotationX < ROTATE_X_LIMIT_ANGLE) rotationX += 0.2f * SENSIVITY; else rotationX = ROTATE_X_LIMIT_ANGLE;
-        }
-
-        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-            if(rotationX > -ROTATE_X_LIMIT_ANGLE) rotationX -= 0.2f * SENSIVITY; else rotationX = -ROTATE_X_LIMIT_ANGLE;
-        }
-
         if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
             camera.translate(new Vector3f(0,-speed * deltaTime, 0));
         }
@@ -53,6 +47,8 @@ public class FreeCamera extends Constants {
 
         rotationY += dy * SENSIVITY * deltaTime;
         rotationX += dx * -SENSIVITY * deltaTime;
+
+        if(rotationY < -ROTATE_Y_LIMIT_ANGLE) rotationY = -ROTATE_Y_LIMIT_ANGLE; else if(rotationY > ROTATE_Y_LIMIT_ANGLE) rotationY = ROTATE_Y_LIMIT_ANGLE;
 
         camera.rotateY(rotationX);
         camera.rotateX(rotationY);

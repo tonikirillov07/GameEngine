@@ -9,8 +9,8 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 
 public class UIRenderer {
-    private List<UIElement> uiElements = new ArrayList<>();
-    private Window window;
+    private final List<UIElement> uiElements = new ArrayList<>();
+    private final Window window;
 
     public UIRenderer(Window window) {
         this.window = window;
@@ -20,7 +20,7 @@ public class UIRenderer {
         for (UIElement uiElement : uiElements) {
             if(!uiElement.isRenderInCenter()) {
                 glLoadIdentity();
-                glTranslatef(uiElement.getPosition().x, uiElement.getPosition().y, 0);
+                glTranslatef(uiElement.getPosition().x, uiElement.getPosition().y, uiElement.getPosition().z);
                 glRotatef(uiElement.getRotationUtil().angle(), uiElement.getRotationUtil().x(), uiElement.getRotationUtil().y(), uiElement.getRotationUtil().z());
             }
 

@@ -6,6 +6,7 @@ import engine.textures.TextureUtil;
 import engine.textures.TexturesDictionary;
 import gameWorld.Environment;
 import gameWorld.Level;
+import models.Plane;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -15,10 +16,12 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 import player.Camera;
 import player.FreeCamera;
 
 import java.awt.*;
+import java.nio.FloatBuffer;
 import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -31,9 +34,8 @@ public class Window extends Constants {
     private FreeCamera freeCamera;
     private Camera camera;
     private Environment environment;
-    private UIRenderer uiRenderer;
-    private UIElement targetTexture;
     private TexturesDictionary texturesDictionary;
+    private UIRenderer uiRenderer;
 
     public void run(){
         try {
@@ -56,8 +58,6 @@ public class Window extends Constants {
             initGLSettings();
             windowResize(getWidth(), getHeight());
 
-            trueTypeFont = new TrueTypeFont(new UnicodeFont(new Font("Arial", Font.BOLD, 24)).getFont(), true);
-
             render = new Render();
 
             texturesDictionary = new TexturesDictionary();
@@ -74,13 +74,15 @@ public class Window extends Constants {
             environment.initFogDefault();
 
             uiRenderer = new UIRenderer(this);
-            targetTexture = new UIElement(Objects.requireNonNull(TextureUtil.createTexture("textures/target.png", TextureUtil.LINEAR)), new Vector2f(0,0), RotationUtil.ZERO, true);
-            uiRenderer.loadUiElement(targetTexture);
 
             update();
         }catch (Exception e){
             ShowExceptions.showException(e);
         }
+    }
+
+    private void drawString(float x, float y, String text){
+        trueTypeFont.drawString(x,y,text);
     }
 
     private void checkError(){
@@ -105,9 +107,6 @@ public class Window extends Constants {
             freeCamera.move(getDeltaTime());
 
             render.renderAll();
-            uiRenderer.renderAll();
-
-            //trueTypeFont.drawString(0.100f, 0.50f, "THE LIGHTWEIGHT JAVA GAMES LIBRARY", new org.newdawn.slick.Color(255, 0, 0));
 
             listenInput();
 
@@ -157,9 +156,6 @@ public class Window extends Constants {
         glEnable(GL11.GL_DEPTH_TEST);
         glEnable(GL_TEXTURE_2D);
         glClearDepth(1);
-
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, getWidth(), 0, getHeight(), 1, -1);
 
         GL11.glLoadIdentity();
         glFrustum(-1, 1, -1, 1, 2, 800);
